@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Список расходов')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container">
+    <div class="head">
+        <div>
+            <h1 class="page-title">Мои расходы</h1>
+            <p class="page-subtitle"
+               th:text="${selected} ? 'Категория «' + ${selected.title} + '»' : 'Все категории'">Все категории</p>
+        </div>
+        <a class="btn btn-accent" th:href="@{/expenses/new}">+ Добавить</a>
+    </div>
+
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+
+    <div class="stats">
+        <div class="stat stat-main">
+            <p class="stat-label" th:text="${selected} ? 'Итого по категории' : 'Итого'">Итого</p>
+            <p class="stat-value" th:text="${#numbers.formatDecimal(total, 1, 'WHITESPACE', 2, 'COMMA')} + ' ₽'">0 ₽</p>
+        </div>
+        <div class="stat">
+            <p class="stat-label">Записей</p>
+            <p class="stat-value" th:text="${#lists.size(expenses)}">0</p>
+        </div>
+    </div>
+
+    <nav class="filter" aria-label="Фильтр по категории">
+        <a th:href="@{/expenses}" class="chip" th:classappend="${selected == null} ? 'chip-active'">Все</a>
+        <a th:each="c : ${categories}"
+           th:href="@{/expenses(category=${c})}"
+           th:text="${c.title}"
+           class="chip"
+           th:classappend="${selected == c} ? 'chip-active'">Категория</a>
+    </nav>
+
+    <div class="card" th:if="${!#lists.isEmpty(expenses)}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="num">Сумма</th>
+                <th>Категория</th>
+                <th class="th-date">Дата</th>
+                <th class="actions-col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e : ${expenses}">
+                <td class="num amount"
+                    th:text="${#numbers.formatDecimal(e.amount, 1, 'WHITESPACE', 2, 'COMMA')} + ' ₽'">0 ₽</td>
+                <td><span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(e.category.name())}"
+                          th:text="${e.category.title}">Категория</span></td>
+                <td class="date th-date" th:text="${#temporals.format(e.date, 'dd.MM.yyyy')}">01.01.2026</td>
+                <td class="actions">
+                    <a class="btn btn-ghost btn-sm" th:href="@{/expenses/{id}/edit(id=${e.id})}">Изменить</a>
+                    <button type="button" class="btn btn-danger-ghost btn-sm js-delete"
+                            th:data-action="@{/expenses/{id}/delete(id=${e.id})}"
+                            th:data-info="${#numbers.formatDecimal(e.amount, 1, 'WHITESPACE', 2, 'COMMA')} + ' ₽, ' + ${e.category.title}">Удалить</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card empty" th:if="${#lists.isEmpty(expenses)}">
+        <p class="empty-title">Здесь пока пусто</p>
+        <p class="empty-text" th:text="${selected} ? 'В этой категории ещё нет расходов.' : 'Добавьте первый расход.'">
+            Добавьте первый расход.</p>
+        <a class="btn btn-primary" th:href="@{/expenses/new}">+ Добавить расход</a>
+    </div>
+</main>
+
+<dialog id="deleteDialog" class="dialog">
+    <form method="post" id="deleteForm">
+        <h2 class="dialog-title">Удалить расход?</h2>
+        <p class="dialog-text">Запись «<span id="deleteInfo"></span>» будет удалена без возможности восстановления.</p>
+        <div class="dialog-actions">
+            <button type="button" class="btn btn-ghost" id="deleteCancel">Отмена</button>
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </div>
+    </form>
+</dialog>
+
+<script>
+    const dialog = document.getElementById('deleteDialog');
+    document.querySelectorAll('.js-delete').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('deleteForm').action = btn.dataset.action;
+            document.getElementById('deleteInfo').textContent = btn.dataset.info;
+            dialog.showModal();
+        });
+    });
+    document.getElementById('deleteCancel').addEventListener('click', () => dialog.close());
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Ошибка')}"></head>
+<body class="error-page">
+<main class="error-card">
+    <p class="error-code" th:text="${status}">404</p>
+    <h1 class="card-title" th:text="${status == 404} ? 'Страница не найдена' : 'Что-то пошло не так'">Ошибка</h1>
+    <p class="error-text">Вернитесь к списку и попробуйте ещё раз.</p>
+    <a class="btn btn-primary" th:href="@{/expenses}">К списку расходов</a>
+</main>
+</body>
+</html>

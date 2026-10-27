@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Вход')}"></head>
+<body class="auth-page">
+<aside th:replace="~{fragments :: authBrand}"></aside>
+<main class="auth-main">
+<div class="auth-card">
+    <h2 class="card-title">Вход</h2>
+
+    <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+    <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+
+    <form th:action="@{/login}" th:object="${form}" method="post" class="form" novalidate>
+        <label class="field">
+            <span class="field-label">Логин</span>
+            <input type="text" th:field="*{login}" autocomplete="username" autofocus
+                   th:classappend="${#fields.hasErrors('login')} ? 'is-invalid'">
+            <span class="field-error" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></span>
+        </label>
+
+        <label class="field">
+            <span class="field-label">Пароль</span>
+            <input type="password" th:field="*{password}" autocomplete="current-password"
+                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+            <span class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-block">Войти</button>
+    </form>
+
+    <p class="auth-switch">Нет аккаунта? <a th:href="@{/register}">Зарегистрироваться</a></p>
+</div>
+</main>
+</body>
+</html>

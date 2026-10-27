@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' · Учёт расходов'">Учёт расходов</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<svg th:fragment="logo" class="logo" viewBox="0 0 32 32" aria-hidden="true">
+    <rect x="3" y="7" width="26" height="19" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/>
+    <path d="M3 13h26" stroke="currentColor" stroke-width="2.4"/>
+    <circle cx="22" cy="20" r="2.2" fill="currentColor"/>
+</svg>
+
+<header th:fragment="header" class="topbar">
+    <a class="brand" th:href="@{/expenses}">
+        <svg th:replace="~{fragments :: logo}"></svg>
+        <span class="brand-name">Учёт расходов</span>
+    </a>
+    <div class="topbar-user">
+        <span class="user-login" th:text="${session.userLogin}">login</span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-ghost btn-sm">Выйти</button>
+        </form>
+    </div>
+</header>
+
+<aside th:fragment="authBrand" class="auth-aside">
+    <div class="brand">
+        <svg th:replace="~{fragments :: logo}"></svg>
+        <span class="brand-name">Учёт расходов</span>
+    </div>
+    <div>
+        <p class="auth-headline">Видно, куда уходят деньги</p>
+        <ul class="auth-points">
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>Записывайте сумму, категорию и дату</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>Смотрите траты по категориям</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>Исправляйте записи в любой момент</li>
+        </ul>
+    </div>
+    <span></span>
+</aside>
+
+</body>
+</html>

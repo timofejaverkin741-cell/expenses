@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Новый расход')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container container-narrow">
+    <a class="back-link" th:href="@{/expenses}">← К списку расходов</a>
+    <div class="head">
+        <div>
+            <h1 class="page-title">Новый расход</h1>
+            <p class="page-subtitle">Укажите сумму, категорию и дату</p>
+        </div>
+    </div>
+
+    <form class="card form form-card" th:action="@{/expenses}" th:object="${form}" method="post" novalidate>
+        <div class="field-row">
+            <label class="field">
+                <span class="field-label">Сумма, ₽</span>
+                <input type="number" th:field="*{amount}" step="0.01" min="0" placeholder="0,00" autofocus
+                       th:classappend="${#fields.hasErrors('amount')} ? 'is-invalid'">
+                <span class="field-error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+            </label>
+
+            <label class="field">
+                <span class="field-label">Дата</span>
+                <input type="date" th:field="*{date}"
+                       th:classappend="${#fields.hasErrors('date')} ? 'is-invalid'">
+                <span class="field-error" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></span>
+            </label>
+        </div>
+
+        <label class="field">
+            <span class="field-label">Категория</span>
+            <select th:field="*{category}" th:classappend="${#fields.hasErrors('category')} ? 'is-invalid'">
+                <option value="">— выберите категорию —</option>
+                <option th:each="c : ${categories}" th:value="${c}" th:text="${c.title}">Категория</option>
+            </select>
+            <span class="field-error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+        </label>
+
+        <div class="form-actions">
+            <a class="btn btn-ghost" th:href="@{/expenses}">Отмена</a>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>
